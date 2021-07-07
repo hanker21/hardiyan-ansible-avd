@@ -1,0 +1,42 @@
+---
+- name: Build Switch configuration
+  hosts: DC1_FABRIC
+  connection: local
+  gather_facts: no
+
+  tasks:
+
+    - name: generate intented variables
+      tags: [build]
+      import_role:
+         name: arista.avd.eos_designs
+
+    - name: generate device intended config and documention
+      tags: [build]
+      import_role:
+         name: arista.avd.eos_cli_config_gen
+
+- name: Configuration deployment with CVP
+  hosts: DC1-CVP
+  connection: httpapi
+  gather_facts: no
+  vars:
+    ansible_httpapi_host: 192.168.26.126
+    ansible_host: 192.168.26.126
+    ansible_user: cvpadmin
+    ansible_password: D4t4c0mm
+    ansible_network_os: eos
+    ansible_httpapi_use_ssl: true
+    ansible_httpapi_validate_certs: false
+
+  tasks:
+
+    - name: run CVP provisioning
+      import_role:
+         name: arista.avd.eos_config_deploy_cvp
+      vars:
+        container_root: 'DC1_FABRIC'
+        configlets_prefix: 'DC1-AVD'
+        device_filter: 'DC1'
+        state: present
+        execute_tasks: true

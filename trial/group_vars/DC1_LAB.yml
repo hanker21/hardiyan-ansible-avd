@@ -1,0 +1,24 @@
+# local users
+local_users:
+  admin:
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$.f8MdkEL7KJsnjU/$AG6VuQE4uxU7NeOan3wUBUm0wfbdH5UCFArRrGiOiYTNbAkw3aJofgJYQJf8fPWcZFtzvPDgpKilASxiqNm3b1"
+
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$AHTX2y3wwDmHOdKw$zDhSHr.wyq43oBtZ0TStJ7hVU8D7/lKYYkxVgvZe/gNp8WNx401kCJNk/hGtz.fE2UxfRf.7ouUvntOYa6miJ."
+
+mgmt_gateway: 192.168.26.1
+
+cvp_instance_ips:
+  - 192.168.26.126
+
+cvp_ingestauth_key: magickey
+
+clock:
+  timezone: "Asia/Jakarta"
+
+ntp_servers:
+  - 192.168.12.54

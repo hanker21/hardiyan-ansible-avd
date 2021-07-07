@@ -1,0 +1,31 @@
+ansible==2.10.0
+netaddr==0.7.19
+Jinja2==2.11.3
+requests==2.25.1
+treelib==1.5.5
+cvprac==1.0.5
+paramiko==2.7.1
+jsonschema==3.2.0
+requests==2.25.1
+PyYAML==5.4.1
+md-toc==7.1.0
+
+pip3 install setuptools-rust
+sudo apt install rustc
+
+ansible all --list-hosts
+
+arista.avd.eos_designs 
+
+sudo chown username: myfolder
+sudo chmod u+w myfolder
+
+$ grep john /etc/passwd
+john:x:0:0::/home/john:/bin/sh
+
+Check python version on terminal - python --version
+Get root user privileges. On terminal type - sudo su
+Write down the root user password.
+Execute this command to switch to python 3.6. update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+Check python version - python --version
+All Done!

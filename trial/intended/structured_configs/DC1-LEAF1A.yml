@@ -1,0 +1,148 @@
+router_bgp:
+  as: 65101
+  router_id: 120.0.0.2
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
+  - maximum-paths 4 ecmp 4
+  peer_groups:
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      remote_as: 65001
+      password: AQQvKeimxJu+uGQ/yYvv9w==
+      maximum_routes: 12000
+      send_community: all
+    EVPN-OVERLAY-PEERS:
+      type: evpn
+      update_source: Loopback0
+      bfd: true
+      ebgp_multihop: '3'
+      password: q+VNViP5i4rVjW1cxFv2wA==
+      send_community: all
+      maximum_routes: 0
+  address_family_ipv4:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  neighbors:
+    172.16.10.0:
+      peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE1_Ethernet1
+    120.0.0.1:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: DC1-SPINE1
+      remote_as: 65001
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.26.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+daemon_terminattr:
+  ingestgrpcurl:
+    ips:
+    - 192.168.26.126
+    port: 9910
+  ingestauth_key: magickey
+  ingestvrf: MGMT
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+ntp_server:
+  local_interface:
+    vrf: MGMT
+    interface: Management1
+  nodes:
+  - 192.168.12.54
+spanning_tree:
+  mode: mstp
+  mst_instances:
+    '0':
+      priority: 4096
+local_users:
+  admin:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$.f8MdkEL7KJsnjU/$AG6VuQE4uxU7NeOan3wUBUm0wfbdH5UCFArRrGiOiYTNbAkw3aJofgJYQJf8fPWcZFtzvPDgpKilASxiqNm3b1
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$AHTX2y3wwDmHOdKw$zDhSHr.wyq43oBtZ0TStJ7hVU8D7/lKYYkxVgvZe/gNp8WNx401kCJNk/hGtz.fE2UxfRf.7ouUvntOYa6miJ.
+vrfs:
+  MGMT:
+    ip_routing: false
+management_interfaces:
+  Management1:
+    description: oob_management
+    shutdown: false
+    vrf: MGMT
+    ip_address: 192.168.26.112/24
+    gateway: 192.168.26.1
+    type: oob
+management_api_http:
+  enable_vrfs:
+    MGMT: {}
+  enable_https: true
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 120.0.0.2/32
+  Loopback1:
+    description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
+    ip_address: 110.0.0.2/32
+ethernet_interfaces:
+  Ethernet1:
+    peer: DC1-SPINE1
+    peer_interface: Ethernet1
+    peer_type: spine
+    description: P2P_LINK_TO_DC1-SPINE1_Ethernet1
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ip_address: 172.16.10.1/31
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 120.0.0.0/24 eq 32
+      20:
+        action: permit 110.0.0.0/24 eq 32
+route_maps:
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+ip_igmp_snooping:
+  globally_enabled: true
+vxlan_tunnel_interface:
+  Vxlan1:
+    description: DC1-LEAF1A_VTEP
+    source_interface: Loopback1
+    vxlan_udp_port: 4789
+    vxlan_vni_mappings: {}
+ip_virtual_router_mac_address: aa:aa:bb:bb:cc:cc

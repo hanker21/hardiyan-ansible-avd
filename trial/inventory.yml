@@ -1,0 +1,45 @@
+all:
+  children:
+    DC1_LAB:
+      children:
+        cloudvision:
+          hosts:
+            DC1-CVP:
+              #vars:
+                #ansible_httpapi_host: 192.168.26.126
+                #ansible_host: 192.168.26.126
+                #ansible_user: cvpadmin
+                #ansible_password: D4t4c0mm
+                #ansible_connection: httpapi
+                #ansible_httpapi_use_ssl: true
+                #ansible_httpapi_validate_certs: false
+                #ansible_network_os: eos
+                #ansible_httpapi_port: 443
+                # Configuration to get Virtual Env information
+                #ansible_python_interpreter: $(which python3)
+        DC1_FABRIC:
+          children:
+            DC1_SPINES:
+              hosts:
+                DC1-SPINE1:
+                  ansible_host: 192.168.26.111
+            DC1_LEAFS:
+              children:
+                DC1_LEAF1:
+                  hosts:
+                    DC1-LEAF1A:
+                      ansible_host: 192.168.26.112
+                DC1_LEAF2:
+                  hosts:
+                    DC1-LEAF2A:
+                      ansible_host: 192.168.26.113
+
+          vars:
+            ansible_connection: httpapi
+            ansible_network_os: eos
+            ansible_user: admin
+            ansible_ssh_pass: admin
+            ansible_become: yes
+            ansible_become_method: enable
+            ansible_httpapi_use_ssl: true
+            ansible_httpapi_validate_certs: false

@@ -1,0 +1,141 @@
+CVP_CONFIGLETS:
+  DC1-AVD_DC1-LEAF1A: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec\
+    \ /usr/bin/TerminAttr -ingestgrpcurl=192.168.26.126:9910 -cvcompression=gzip -ingestauth=key,magickey\
+    \ -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
+    \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
+    \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
+    \ protocols model multi-agent\n!\nhostname DC1-LEAF1A\n!\nntp local-interface\
+    \ vrf MGMT Management1\nntp server vrf MGMT 192.168.12.54 prefer\n!\nspanning-tree\
+    \ mode mstp\nspanning-tree mst 0 priority 4096\n!\nno aaa root\nno enable password\n\
+    !\nusername admin privilege 15 role network-admin secret sha512 $6$.f8MdkEL7KJsnjU/$AG6VuQE4uxU7NeOan3wUBUm0wfbdH5UCFArRrGiOiYTNbAkw3aJofgJYQJf8fPWcZFtzvPDgpKilASxiqNm3b1\n\
+    username cvpadmin privilege 15 role network-admin secret sha512 $6$AHTX2y3wwDmHOdKw$zDhSHr.wyq43oBtZ0TStJ7hVU8D7/lKYYkxVgvZe/gNp8WNx401kCJNk/hGtz.fE2UxfRf.7ouUvntOYa6miJ.\n\
+    !\nclock timezone Asia/Jakarta\n!\nvrf instance MGMT\n!\ninterface Ethernet1\n\
+    \   description P2P_LINK_TO_DC1-SPINE1_Ethernet1\n   no shutdown\n   mtu 1500\n\
+    \   no switchport\n   ip address 172.16.10.1/31\n!\ninterface Loopback0\n   description\
+    \ EVPN_Overlay_Peering\n   no shutdown\n   ip address 120.0.0.2/32\n!\ninterface\
+    \ Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address\
+    \ 110.0.0.2/32\n!\ninterface Management1\n   description oob_management\n   no\
+    \ shutdown\n   vrf MGMT\n   ip address 192.168.26.112/24\n!\ninterface Vxlan1\n\
+    \   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n!\nip virtual-router\
+    \ mac-address aa:aa:bb:bb:cc:cc\n!\nip routing\nno ip routing vrf MGMT\n!\nip\
+    \ prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 120.0.0.0/24 eq 32\n\
+    \   seq 20 permit 110.0.0.0/24 eq 32\n!\nip route vrf MGMT 0.0.0.0/0 192.168.26.1\n\
+    !\nroute-map RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n\
+    !\nrouter bfd\n   multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp\
+    \ 65101\n   router-id 120.0.0.2\n   no bgp default ipv4-unicast\n   distance bgp\
+    \ 20 200 200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths\
+    \ 4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS\
+    \ update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS\
+    \ ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n\
+    \   neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS\
+    \ maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS\
+    \ remote-as 65001\n   neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==\n\
+    \   neighbor IPv4-UNDERLAY-PEERS send-community\n   neighbor IPv4-UNDERLAY-PEERS\
+    \ maximum-routes 12000\n   neighbor 120.0.0.1 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 120.0.0.1 remote-as 65001\n   neighbor 120.0.0.1 description DC1-SPINE1\n\
+    \   neighbor 172.16.10.0 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.16.10.0\
+    \ description DC1-SPINE1_Ethernet1\n   redistribute connected route-map RM-CONN-2-BGP\n\
+    \   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n  \
+    \ !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n \
+    \     neighbor IPv4-UNDERLAY-PEERS activate\n!\nmanagement api http-commands\n\
+    \   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no shutdown\n!\n\
+    end\n"
+  DC1-AVD_DC1-LEAF2A: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec\
+    \ /usr/bin/TerminAttr -ingestgrpcurl=192.168.26.126:9910 -cvcompression=gzip -ingestauth=key,magickey\
+    \ -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
+    \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
+    \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
+    \ protocols model multi-agent\n!\nhostname DC1-LEAF2A\n!\nntp local-interface\
+    \ vrf MGMT Management1\nntp server vrf MGMT 192.168.12.54 prefer\n!\nspanning-tree\
+    \ mode mstp\nspanning-tree mst 0 priority 4096\n!\nno aaa root\nno enable password\n\
+    !\nusername admin privilege 15 role network-admin secret sha512 $6$.f8MdkEL7KJsnjU/$AG6VuQE4uxU7NeOan3wUBUm0wfbdH5UCFArRrGiOiYTNbAkw3aJofgJYQJf8fPWcZFtzvPDgpKilASxiqNm3b1\n\
+    username cvpadmin privilege 15 role network-admin secret sha512 $6$AHTX2y3wwDmHOdKw$zDhSHr.wyq43oBtZ0TStJ7hVU8D7/lKYYkxVgvZe/gNp8WNx401kCJNk/hGtz.fE2UxfRf.7ouUvntOYa6miJ.\n\
+    !\nclock timezone Asia/Jakarta\n!\nvrf instance MGMT\n!\ninterface Ethernet1\n\
+    \   description P2P_LINK_TO_DC1-SPINE1_Ethernet1\n   no shutdown\n   mtu 1500\n\
+    \   no switchport\n   ip address 172.16.10.3/31\n!\ninterface Loopback0\n   description\
+    \ EVPN_Overlay_Peering\n   no shutdown\n   ip address 120.0.0.3/32\n!\ninterface\
+    \ Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address\
+    \ 110.0.0.3/32\n!\ninterface Management1\n   description oob_management\n   no\
+    \ shutdown\n   vrf MGMT\n   ip address 192.168.26.113/24\n!\ninterface Vxlan1\n\
+    \   vxlan source-interface Loopback1\n   vxlan udp-port 4789\n!\nip virtual-router\
+    \ mac-address aa:aa:bb:bb:cc:cc\n!\nip routing\nno ip routing vrf MGMT\n!\nip\
+    \ prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 120.0.0.0/24 eq 32\n\
+    \   seq 20 permit 110.0.0.0/24 eq 32\n!\nip route vrf MGMT 0.0.0.0/0 192.168.26.1\n\
+    !\nroute-map RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n\
+    !\nrouter bfd\n   multihop interval 300 min-rx 300 multiplier 3\n!\nrouter bgp\
+    \ 65102\n   router-id 120.0.0.3\n   no bgp default ipv4-unicast\n   distance bgp\
+    \ 20 200 200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths\
+    \ 4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS\
+    \ update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS\
+    \ ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n\
+    \   neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS\
+    \ maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS\
+    \ remote-as 65001\n   neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==\n\
+    \   neighbor IPv4-UNDERLAY-PEERS send-community\n   neighbor IPv4-UNDERLAY-PEERS\
+    \ maximum-routes 12000\n   neighbor 120.0.0.1 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 120.0.0.1 remote-as 65001\n   neighbor 120.0.0.1 description DC1-SPINE1\n\
+    \   neighbor 172.16.10.2 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.16.10.2\
+    \ description DC1-SPINE1_Ethernet1\n   redistribute connected route-map RM-CONN-2-BGP\n\
+    \   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n  \
+    \ !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n \
+    \     neighbor IPv4-UNDERLAY-PEERS activate\n!\nmanagement api http-commands\n\
+    \   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no shutdown\n!\n\
+    end\n"
+  DC1-AVD_DC1-SPINE1: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec\
+    \ /usr/bin/TerminAttr -ingestgrpcurl=192.168.26.126:9910 -cvcompression=gzip -ingestauth=key,magickey\
+    \ -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
+    \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
+    \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
+    \ protocols model multi-agent\n!\nhostname DC1-SPINE1\n!\nntp local-interface\
+    \ vrf MGMT Management1\nntp server vrf MGMT 192.168.12.54 prefer\n!\nspanning-tree\
+    \ mode none\n!\nno aaa root\nno enable password\n!\nusername admin privilege 15\
+    \ role network-admin secret sha512 $6$.f8MdkEL7KJsnjU/$AG6VuQE4uxU7NeOan3wUBUm0wfbdH5UCFArRrGiOiYTNbAkw3aJofgJYQJf8fPWcZFtzvPDgpKilASxiqNm3b1\n\
+    username cvpadmin privilege 15 role network-admin secret sha512 $6$AHTX2y3wwDmHOdKw$zDhSHr.wyq43oBtZ0TStJ7hVU8D7/lKYYkxVgvZe/gNp8WNx401kCJNk/hGtz.fE2UxfRf.7ouUvntOYa6miJ.\n\
+    !\nclock timezone Asia/Jakarta\n!\nvrf instance MGMT\n!\ninterface Ethernet1\n\
+    \   description P2P_LINK_TO_DC1-LEAF2A_Ethernet1\n   no shutdown\n   mtu 1500\n\
+    \   no switchport\n   ip address 172.16.10.2/31\n!\ninterface Loopback0\n   description\
+    \ EVPN_Overlay_Peering\n   no shutdown\n   ip address 120.0.0.1/32\n!\ninterface\
+    \ Management1\n   description oob_management\n   no shutdown\n   vrf MGMT\n  \
+    \ ip address 192.168.26.111/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip prefix-list\
+    \ PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 120.0.0.0/24 eq 32\n!\nip route\
+    \ vrf MGMT 0.0.0.0/0 192.168.26.1\n!\nroute-map RM-CONN-2-BGP permit 10\n   match\
+    \ ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter bfd\n   multihop\
+    \ interval 300 min-rx 300 multiplier 3\n!\nrouter bgp 65001\n   router-id 120.0.0.1\n\
+    \   no bgp default ipv4-unicast\n   distance bgp 20 200 200\n   graceful-restart\
+    \ restart-time 300\n   graceful-restart\n   maximum-paths 4 ecmp 4\n   neighbor\
+    \ EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged\n\
+    \   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS\
+    \ bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS\
+    \ password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS send-community\n\
+    \   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS\
+    \ peer group\n   neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==\n\
+    \   neighbor IPv4-UNDERLAY-PEERS send-community\n   neighbor IPv4-UNDERLAY-PEERS\
+    \ maximum-routes 12000\n   neighbor 120.0.0.2 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 120.0.0.2 remote-as 65101\n   neighbor 120.0.0.2 description DC1-LEAF1A\n\
+    \   neighbor 120.0.0.3 peer group EVPN-OVERLAY-PEERS\n   neighbor 120.0.0.3 remote-as\
+    \ 65102\n   neighbor 120.0.0.3 description DC1-LEAF2A\n   neighbor 172.16.10.3\
+    \ peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.16.10.3 remote-as 65102\n  \
+    \ neighbor 172.16.10.3 description DC1-LEAF2A_Ethernet1\n   redistribute connected\
+    \ route-map RM-CONN-2-BGP\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
+    \ activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS\
+    \ activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n!\nmanagement api http-commands\n\
+    \   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no shutdown\n!\n\
+    end\n"
+CVP_TOPOLOGY:
+  DC1_FABRIC:
+    parent_container: Tenant
+  DC1_LEAF1:
+    devices:
+    - DC1-LEAF1A
+    parent_container: DC1_LEAFS
+  DC1_LEAF2:
+    devices:
+    - DC1-LEAF2A
+    parent_container: DC1_LEAFS
+  DC1_LEAFS:
+    parent_container: DC1_FABRIC
+  DC1_SPINES:
+    devices:
+    - DC1-SPINE1
+    parent_container: DC1_FABRIC
+changed: false
